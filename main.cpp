@@ -54,7 +54,7 @@ void countS()
 }
 
 void LSD(int exp)
-//implementare de counting sort
+//cu implementare de counting sort
 {
     int output[k]; // output array
     int i, contor[10] = { 0 };
@@ -164,6 +164,41 @@ void mergeS(int l,int r){
 }
 //merge sort code credit: https://www.geeksforgeeks.org/merge-sort/
 
+int pivot(int l,int r){
+//selectarea medianei din 3
+int m =l+ (r-l)/2;
+int med,medi;//mediana si pozitia ei
+    if ((v[l] < v[m] && v[m] < v[r]) || (v[r] < v[m] && v[m] < v[l]))
+       {med=v[m];medi=m;}
+    else if ((v[m] < v[l] && v[l] < v[r]) || (v[r] < v[l] && v[l] < v[m]))
+       {med=v[l];medi=l;}
+    else
+       {med=v[r];medi=r;}
+
+
+
+int i=l-1;//pozitia pe care trebuie sa ajunga pivotul
+for(int j=l;j<=r-1;j++)
+{
+    if(v[j]<med)
+    {
+        i++;
+        swap(v[i],v[j]);
+    }
+}
+swap(v[i+1],v[medi]);
+return (i+1);
+}
+
+void quickS(int l,int r){
+    if(l<r)
+    {
+        int piv=pivot(l,r);
+    quickS(l,piv-1);
+    quickS(piv+1,r);
+    }
+
+}
 
 void input(char filename[])
 {
@@ -201,6 +236,14 @@ void runSorts()
     t= clock()-t;
     output();
     restoreBackup();
+    //Quick Sort
+    fout<<"Quick Sort:"<<'\n';
+    t=clock();
+    quickS(0,k-1);
+    Sleep(1);
+    t= clock()-t;
+    output();
+    restoreBackup();
     //Radix LSD sort
     t=clock();
     radixS();
@@ -208,7 +251,7 @@ void runSorts()
     t= clock()-t;
     output();
     restoreBackup();
-    //Quick Sort
+
     fout<<'\n';
 
 }
