@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1615628349 source:c:\code\sd_sorts\main.cpp
+	<fstream>
+	<time.h>
+	<windows.h>
+	<cstring>
+

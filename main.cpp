@@ -1,11 +1,12 @@
 #include <fstream>
 #include <time.h>
 #include <windows.h>
+#include <cstring>
 using namespace std;
     int k;
-    int v[1000];
-    int backup[1000];
-    int aux[9000];//pt countsort
+    int v[10000];
+    int backup[10000];
+    int aux[10000];//pt countsort
 
     ofstream fout("rez.txt");
     time_t t;
@@ -45,7 +46,7 @@ void countS()
     for (int i=0;i<k;i++)
         aux[v[i]]++;
     int kk=0;
-    for(int i=0;i<9000;i++)
+    for(int i=0;i<10000;i++)
     while(aux[i]>0)
         {
             v[kk++]=i;
@@ -59,16 +60,18 @@ void LSD(int exp)
     int output[k]; // output array
     int i, contor[10] = { 0 };
 
-    // Store contor of occurrences in contor[]
+    // incrementz numarul de elemente cu cifra respectiva
     for (i = 0; i < k; i++)
         contor[(v[i] / exp) % 10]++;
 
     // Change contor[i] so that contor[i] now contains actual
     //  position of this digit in output[]
+    //decalez contoarele unul in functie de celalalt
     for (i = 1; i < 10; i++)
         contor[i] += contor[i - 1];
 
     // Build the output array
+    //iau termenii din vector si ii pun in output in functie de bucketuri
     for (i = k - 1; i >= 0; i--) {
         output[contor[(v[i] / exp) % 10] - 1] = v[i];
         contor[(v[i] / exp) % 10]--;
@@ -169,38 +172,44 @@ int pivot(int l,int r){
 int m =l+ (r-l)/2;
 int med,medi;//mediana si pozitia ei
     if ((v[l] < v[m] && v[m] < v[r]) || (v[r] < v[m] && v[m] < v[l]))
-       {med=v[m];medi=m;}
+       {med=v[m];medi=m;
+       swap(v[m],v[r]);medi=r;
+       }
     else if ((v[m] < v[l] && v[l] < v[r]) || (v[r] < v[l] && v[l] < v[m]))
-       {med=v[l];medi=l;}
+       {
+           med=v[l];medi=l;
+           swap(v[l],v[r]);medi=r;
+
+       }
     else
-       {med=v[r];medi=r;}
-
-
-
-int i=l-1;//pozitia pe care trebuie sa ajunga pivotul
-for(int j=l;j<=r-1;j++)
-{
-    if(v[j]<med)
+       {
+        med=v[r];medi=r;
+       }
+       int i=l-1 ;//pozitia pe care trebuie sa ajunga pivotul
+    for(int j=l;j<r;j++)
     {
-        i++;
-        swap(v[i],v[j]);
+
+        if(v[j]<med)
+        {
+            i++;
+            swap(v[i],v[j]);
+        }
     }
-}
-swap(v[i+1],v[medi]);
-return (i+1);
+    swap(v[i+1],v[medi]);
+    return (i+1);
 }
 
 void quickS(int l,int r){
     if(l<r)
     {
-        int piv=pivot(l,r);
+    int piv=pivot(l,r);
     quickS(l,piv-1);
     quickS(piv+1,r);
     }
 
 }
 
-void input(char filename[])
+void input(string filename)
 {
         ifstream fin(filename);
     //input -- direct vectorul de sortat, fara marime
@@ -257,10 +266,16 @@ void runSorts()
 }
 int main()
 {
-    input("date.txt");
-    runSorts();
-    input("date1.txt");
-    runSorts();
+    ifstream files("files.txt");
+    int n;
+    files>>n;
+    string fisier;
+    for (int i=0;i<n;i++)
+    {
+        files>>fisier;
+        input(fisier);
+        runSorts();
+    }
     fout.close();
     return 0;
 }
